@@ -1,0 +1,5 @@
+var config = {};
+
+config.access_token = "";
+
+module.exports = config;
