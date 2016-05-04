@@ -15,40 +15,21 @@ app.use('/img', express.static(__dirname + '/img'));
 /*
 * Just a function I use to test console logs and responses 
 */
+
+  var intentGlobal = null;
+
+
 app.get('/', function (req, res) {
   res.send('Hello World!');
   var str = "how about some pizza";
   console.log(encodeURI(str));
   console.log(req.get('host'));
-  
-  /*
-  request.get('https://api.wit.ai/message?q=pizza%20please', {
-    headers: {
-      'Authorization': 'Bearer EQRDHTUB2PXKTSKICUUB2PGCWZ47G65F'
-    }
-  })
-  .on('response', function(response) {
-    console.log(response)
-  })
-  
-});
-*/
 
-  request({
-      url: 'https://api.wit.ai/message?q=pizza%20please', //URL to hit
-      method: 'GET', //Specify the method
-      headers: { //We can define headers too
-        'Authorization': 'Bearer EQRDHTUB2PXKTSKICUUB2PGCWZ47G65F'
-      }
-  }, function(error, response, body){
-      if(error) {
-          console.log(error);
-      } else {
-          var bodyjsonparse = JSON.parse(body);
-          var intent = bodyjsonparse["outcomes"][0]["entities"]["intent"][0]["value"];
-          console.log(intent);
-      }
-  });
+  var str = "pizza please??";
+  
+  //getRequest(str);
+  //console.log("Intent global outside " + intentGlobal);
+
 });
 
 /*
@@ -71,6 +52,8 @@ app.get('/webhook/', function (req, res) {
 *
 */
 
+var text = "";
+
 app.post('/webhook/', function (req, res) {
   var messaging_events = req.body.entry[0].messaging;
   console.log("app.post ran")
@@ -79,7 +62,11 @@ app.post('/webhook/', function (req, res) {
     event = req.body.entry[0].messaging[i];
     var userid = event.sender.id;
     if (event.message && event.message.text) {
-      var text = event.message.text;
+      text = event.message.text;
+      
+      getRequest();
+      
+      /*
       if (text == "need a penguin") {
         console.log("need a penguin");
         penguinPhotoMessage(userid);
@@ -91,9 +78,34 @@ app.post('/webhook/', function (req, res) {
       else {
         sendMessage(userid, {text: "Hello Penguin!!"});
       }
+      */
+      
     }
   }
   res.sendStatus(200);
+});
+
+function getRequest(callback) {
+  console.log("text " + text);
+  request({
+      url: 'https://api.wit.ai/message?q=' + encodeURI(text), 
+      method: 'GET', 
+      headers: { 
+        'Authorization': 'Bearer ' + config.wit_access_token
+      }
+  }, function(error, response, body){
+      if(!error && response.statusCode == 200) {
+          var bodyjsonparse = JSON.parse(body);
+          var intent = bodyjsonparse["outcomes"][0]["entities"]["intent"][0]["value"];
+          console.log("intent " + intent);
+          callback && callback(intent);
+      }
+  });
+}
+
+getRequest(function(intent){
+  intentGlobal = intent;
+  console.log("Intent global" + intentGlobal);
 });
 
 
