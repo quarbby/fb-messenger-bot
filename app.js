@@ -7,13 +7,54 @@ var config = require("./config");
 var app = express();
 
 app.use(bodyParser.json());
+app.use(bodyParser.text({ type: 'text/html' }))
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/img', express.static(__dirname + '/img'));
 
+/*
+* Just a function I use to test console logs and responses 
+*/
 app.get('/', function (req, res) {
   res.send('Hello World!');
+  var str = "how about some pizza";
+  console.log(encodeURI(str));
+  console.log(req.get('host'));
+  
+  /*
+  request.get('https://api.wit.ai/message?q=pizza%20please', {
+    headers: {
+      'Authorization': 'Bearer EQRDHTUB2PXKTSKICUUB2PGCWZ47G65F'
+    }
+  })
+  .on('response', function(response) {
+    console.log(response)
+  })
+  
 });
+*/
+
+  request({
+      url: 'https://api.wit.ai/message?q=pizza%20please', //URL to hit
+      method: 'GET', //Specify the method
+      headers: { //We can define headers too
+        'Authorization': 'Bearer EQRDHTUB2PXKTSKICUUB2PGCWZ47G65F'
+      }
+  }, function(error, response, body){
+      if(error) {
+          console.log(error);
+      } else {
+          var bodyjsonparse = JSON.parse(body);
+          var intent = bodyjsonparse["outcomes"][0]["entities"]["intent"][0]["value"];
+          console.log(intent);
+      }
+  });
+});
+
+/*
+* Function for Facebook App validation 
+* Currently not needed anymore
+*/
 
 app.get('/webhook/', function (req, res) {
   if (req.query['hub.verify_token'] === 'penguin_dragon') {
@@ -25,20 +66,14 @@ app.get('/webhook/', function (req, res) {
   console.log("Error: wrong validation token")
 })
 
-app.get('/imgTest/', function (req, res) {  
-    console.log(config.testing_token);
-    console.log(req.get('host'));
-    
-})
 
-var host;
+/* This function is where we receive messages from Facebook
+*
+*/
 
 app.post('/webhook/', function (req, res) {
   var messaging_events = req.body.entry[0].messaging;
   console.log("app.post ran")
-  
-  host = req.get('host');
-  console.log(host);
   
   for (var i = 0; i < messaging_events.length; i++) {
     event = req.body.entry[0].messaging[i];
@@ -73,30 +108,16 @@ function penguinPhotoMessage(recipientId) {
         "elements": [{
           "title": "Baby Penguin #1",
           "subtitle": "All 18 species of penguins live in the Southern Hemisphere.",
-          "image_url": host + "/img/babypenguin.jpg",
+          "image_url": config.host + "/img/babypenguin.jpg",
           "buttons": [{
-            "type": "web_url",
-            "url": "https://www.messenger.com/",
-            "title": "Show Penguin"
-            }, 
-            {
             "type": "postback",
-            "title": "OMG SO CUTE",
-            "payload": "Payload for first element in a generic bubble",
-          }],
-        },{
-          "title": "Baby Penguin #2",
-          "subtitle": "The most southerly penguin colony in the world are a group of Adelies that regularly nest near Camp Royds, Antarctica.",
-          "image_url": host + "/img/babypenguin2.jpg",
-          "buttons": [{
-            "type": "web_url",
-            "url": "https://www.messenger.com/",
-            "title": "Show Penguin"
-            }, 
-            {
+            "url": "OMG So CUTE",
+            "title": "next_picture"
+          }, 
+          {
             "type": "postback",
-            "title": "OMG SO CUTE",
-            "payload": "Payload for first element in a generic bubble",
+            "title": "Okay, cuteness overload",
+            "payload": "end_convo",
           }],
         }]
       }
@@ -118,9 +139,14 @@ function penguinFactMessage(recipientId) {
           "title": "Penguin Fact #1",
           "subtitle": "About 95% of Galapagos penguins, the most northernly of all penguin species, is found along the western coast of Isabela and around Fernandina Island.",
           "buttons": [{
-            "type": "web_url",
-            "url": "https://www.messenger.com/",
-            "title": "Cool, Next Fact!"
+            "type": "postback",
+            "title": "Cool, Next Fact!",
+            "payload": "next_fact"
+          },
+          {
+            "type": "postback",
+            "title": "Enough facts for now",
+            "payload": "end_convo"
             }],
         }]
       }
@@ -129,6 +155,12 @@ function penguinFactMessage(recipientId) {
 
     sendMessage(recipientId, messageData);
 };
+
+/*
+* Send Message function
+* Message should be in a JSON format 
+* If just sending a text it's {text: text}
+*/
 
 var request;
 
