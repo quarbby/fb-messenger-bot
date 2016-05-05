@@ -15,4 +15,4 @@
         * Picture: Bot will show pictures of penguins
         * Unknown: Bot will randomise the return, e.g. "How about a penguin trivia?"
         * Goodbye: Bot will end chat 
-        * ![pic](witai.png)
+        * ![pic](./demo/witai.png)
