@@ -59,6 +59,9 @@ app.post('/webhook/', function (req, res) {
     if (event.postback) {
       var payload = event.postback.payload;
       console.log("Postback received: " + payload);
+      
+      executeIntent(payload);
+      
     }
     else if (event.message && event.message.text) {
         text = event.message.text;
@@ -178,11 +181,17 @@ function sendPenguinFact(recipientId) {
 };
 
 function showHelp() {
-  
+  var message = {text: "Penguins are naturally blur. Type 'picture' for cute penguin pictures, " +
+              "'fact' for penguin trivia, 'joke' for some laughter and 'food' for hungry penguins"
+  };
+  sendMessage(userid, message);
 }
 
 function sendGreeting() {
-  
+  var message = {text: "Hello, Penguin here! What would you like to do today?\n" +
+                "How about a penguin picture, fact, joke or food?"
+  };
+  sendMessage(userid, message);
 }
 
 function sendFoodMessage() {
@@ -194,7 +203,8 @@ function sendDefault() {
 }
 
 function sendGoodbye() {
-  
+  var message = {text: "Goodbye! Penguin will miss you!"};
+  sendMessage(userid, message);
 }
 
 /*
