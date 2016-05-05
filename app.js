@@ -12,6 +12,7 @@ app.use(bodyParser.text({ type: 'text/html' }))
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/img', express.static(__dirname + '/img'));
+app.use('/foodimg', express.static(__dirname + '/foodimg'));
 
 /* Some globals because I can't solve some Javascript problems :( */
 
@@ -28,8 +29,14 @@ app.get('/', function (req, res) {
   console.log(encodeURI(str));
   console.log(req.get('host'));
   
-  console.log(data.hungryStrings);
-
+  var keys = Object.keys(data.pictures);
+  var len = keys.length;
+  var rnd = Math.floor(Math.random()*len);
+  var key = keys[rnd];
+  console.log("random " + key + " " + data.pictures[key]);
+  
+  console.log(data.pictures['Baby Penguin #1']);
+  console.log(data.pictures['Baby Penguin #3']);
 });
 
 /*
@@ -146,16 +153,22 @@ function executeIntent(intent) {
 
 function sendPenguinPhoto() {
   console.log("photo message");
-    
+
+  var keys = Object.keys(data.pictures);
+  var len = keys.length;
+  var rnd = Math.floor(Math.random()*len);
+  var key = keys[rnd];
+  console.log("random picture" + key + " " + data.pictures[key]);
+
   var messageData = {
     "attachment": {
       "type": "template",
       "payload": {
         "template_type": "generic",
         "elements": [{
-          "title": "Baby Penguin #1",
-          "subtitle": "All 18 species of penguins live in the Southern Hemisphere.",
-          "image_url": config.host + "/img/babypenguin.jpg",
+          "title": key,
+          //"subtitle": randomFact,
+          "image_url": data.pictures[key],
           "buttons": [{
             "type": "postback",
             "title": "OMG SO CUTE",
@@ -163,7 +176,7 @@ function sendPenguinPhoto() {
           }, 
           {
             "type": "postback",
-            "title": "Enough distraction",
+            "title": "OK, Enough distraction",
             "payload": "goodbye",
           }],
         }]
@@ -194,7 +207,7 @@ function sendPenguinFact() {
           },
           {
             "type": "postback",
-            "title": "Enough distraction",
+            "title": "OK, Enough distraction",
             "payload": "goodbye"
             }],
         }]
@@ -208,61 +221,56 @@ function sendPenguinFact() {
 function sendFoodMessage() {
   console.log("penguin food message");
   
-  var rand = Math.random();
-  
-  var messageData;
-  
-  if (rand > 0.5) {
-    var randomHungryMessage = data.hungryStrings[Math.floor(Math.random()*data.hungryStrings.length)];
-    messageData = {"text": randomHungryMessage};
-  } 
-  else {
-    messageData = {
-      "attachment": {
-      "type": "template",
-      "payload": {
-        "template_type": "generic",
-        "elements": [{
-          "title": "Penguin's Hungry Too!",
-          "subtitle": "OMNOMNOM",
-          "buttons": [{
-            "type": "postback",
-            "title": "Still Hungry!",
-            "payload": "food"
-          },
-          {
-            "type": "postback",
-            "title": "I'm full",
-            "payload": "goodbye"
-            }],
-        }]
-      }
-      }
-    };
-  }
+  var keys = Object.keys(data.hungryPics);
+  var len = keys.length;
+  var rnd = Math.floor(Math.random()*len);
+  var key = keys[rnd];
+
+  var messageData = {
+    "attachment": {
+    "type": "template",
+    "payload": {
+      "template_type": "generic",
+      "elements": [{
+        "title": key,
+        "image_url": data.hungryPics[key],
+        "buttons": [{
+          "type": "postback",
+          "title": "Still Hungry!",
+          "payload": "food"
+        },
+        {
+          "type": "postback",
+          "title": "I'm full",
+          "payload": "goodbye"
+          }],
+      }]
+    }
+    }
+  };
 
   sendMessage(messageData);  
 }
 
 function showHelp() {
-  var message = {text: "Penguins are naturally blur. Type 'picture' for cute penguin pictures, " +
-              "'fact' for penguin trivia, 'joke' for some laughter and 'food' for hungry penguins"
+  var message = {text: "Penguins are naturally blur. Try: picture, fact, or food."
   };
   sendMessage(message);
 }
 
 function sendGreeting() {
   var message = {text: "Hello, Penguin here! What would you like to do today?\n" +
-                "How about a penguin picture, fact, joke or food?"
+                "How about a picture, fact or food?"
   };
   sendMessage(message);
 }
 
 function sendDefault() {
-  var message = "I'm sorry, I don't understand you. Type 'help' to see what Penguin can do!";
+  var message = "I'm sorry, I don't understand you. Try: picture, fact, or food. " +
+              "Or type 'help' to see what Penguin can do!";
   sendMessage(message);
   
-  var intents = ['picture', 'food', 'fact', 'joke'];
+  var intents = ['picture', 'food', 'fact'];
   var randomIntent = intents[Math.floor(Math.random()*intents.length)];
   executeIntent(randomIntent);
 }
