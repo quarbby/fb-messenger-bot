@@ -27,11 +27,6 @@ app.get('/', function (req, res) {
   console.log(encodeURI(str));
   console.log(req.get('host'));
 
-  var str = "pizza please??";
-  
-  //getRequest(str);
-  //console.log("Intent global outside " + intentGlobal);
-
 });
 
 /*
@@ -61,12 +56,16 @@ app.post('/webhook/', function (req, res) {
   for (var i = 0; i < messaging_events.length; i++) {
     var event = req.body.entry[0].messaging[i];
     userid = event.sender.id;
-    if (event.message && event.message.text) {
-      text = event.message.text;
-      
-      getRequest();
-      
+    if (event.postback) {
+      var payload = event.postback.payload;
+      console.log("Postback received: " + payload);
     }
+    else if (event.message && event.message.text) {
+        text = event.message.text;
+  
+        getRequest();        
+    }
+    
   }
   res.sendStatus(200);
 });
@@ -110,6 +109,9 @@ function executeIntent(intent) {
     case "food":
       sendFoodMessage();
       break;
+    case "goodbye":
+      sendGoodbye();
+      break;
     default:
       sendDefault();
       break;
@@ -131,12 +133,12 @@ function sendPenguinPhoto(recipientId) {
           "buttons": [{
             "type": "postback",
             "title": "OMG SO CUTE",
-            "payload": "next_picture"
+            "payload": "picture"
           }, 
           {
             "type": "postback",
             "title": "Okay, enough distraction",
-            "payload": "end_convo",
+            "payload": "goodbye",
           }],
         }]
       }
@@ -160,12 +162,12 @@ function sendPenguinFact(recipientId) {
           "buttons": [{
             "type": "postback",
             "title": "Cool, Next Fact!",
-            "payload": "next_fact"
+            "payload": "fact"
           },
           {
             "type": "postback",
             "title": "Okay, enough distraction",
-            "payload": "end_convo"
+            "payload": "goodbye"
             }],
         }]
       }
@@ -188,6 +190,10 @@ function sendFoodMessage() {
 }
 
 function sendDefault() {
+  
+}
+
+function sendGoodbye() {
   
 }
 
