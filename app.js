@@ -12,12 +12,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/img', express.static(__dirname + '/img'));
 
+/* Some globals because I can't solve some Javascript problems :( */
+
+var text = "";
+var userid = "";
+
 /*
 * Just a function I use to test console logs and responses 
 */
-
-  var intentGlobal = null;
-
 
 app.get('/', function (req, res) {
   res.send('Hello World!');
@@ -52,33 +54,17 @@ app.get('/webhook/', function (req, res) {
 *
 */
 
-var text = "";
-
 app.post('/webhook/', function (req, res) {
   var messaging_events = req.body.entry[0].messaging;
-  console.log("app.post ran")
+  console.log("facebook message received");
   
   for (var i = 0; i < messaging_events.length; i++) {
-    event = req.body.entry[0].messaging[i];
-    var userid = event.sender.id;
+    var event = req.body.entry[0].messaging[i];
+    userid = event.sender.id;
     if (event.message && event.message.text) {
       text = event.message.text;
       
       getRequest();
-      
-      /*
-      if (text == "need a penguin") {
-        console.log("need a penguin");
-        penguinPhotoMessage(userid);
-      }
-      else if (text == "where is penguin facts") {
-        penguinFactMessage(userid);
-      }
-      //sendTextMessage(sender, "Hello Penguin!! "+ text.substring(0, 200));
-      else {
-        sendMessage(userid, {text: "Hello Penguin!!"});
-      }
-      */
       
     }
   }
@@ -95,21 +81,42 @@ function getRequest(callback) {
       }
   }, function(error, response, body){
       if(!error && response.statusCode == 200) {
-          var bodyjsonparse = JSON.parse(body);
-          var intent = bodyjsonparse["outcomes"][0]["entities"]["intent"][0]["value"];
-          console.log("intent " + intent);
-          callback && callback(intent);
+        var bodyjsonparse = JSON.parse(body);
+        var intent = bodyjsonparse["outcomes"][0]["entities"]["intent"][0]["value"];
+        console.log("intent " + intent);
+        
+        executeIntent(intent);
+          
       }
   });
 }
 
-getRequest(function(intent){
-  intentGlobal = intent;
-  console.log("Intent global" + intentGlobal);
-});
+function executeIntent(intent) {
+  console.log("Calling intent " + intent);
+  
+  switch (intent) {
+    case "help":
+      showHelp();
+      break;
+    case "greeting":
+      sendGreeting();
+      break;
+    case "picture":
+      console.log("Picture");
+      sendPenguinPhoto(userid);
+      break;
+    case "fact":
+      sendPenguinFact(userid);
+    case "food":
+      sendFoodMessage();
+      break;
+    default:
+      sendDefault();
+      break;
+  }   
+}
 
-
-function penguinPhotoMessage(recipientId) {
+function sendPenguinPhoto(recipientId) {
   console.log("photo message");
     
   var messageData = {
@@ -123,12 +130,12 @@ function penguinPhotoMessage(recipientId) {
           "image_url": config.host + "/img/babypenguin.jpg",
           "buttons": [{
             "type": "postback",
-            "url": "OMG So CUTE",
-            "title": "next_picture"
+            "title": "OMG SO CUTE",
+            "payload": "next_picture"
           }, 
           {
             "type": "postback",
-            "title": "Okay, cuteness overload",
+            "title": "Okay, enough distraction",
             "payload": "end_convo",
           }],
         }]
@@ -139,7 +146,7 @@ function penguinPhotoMessage(recipientId) {
     sendMessage(recipientId, messageData);
 };
 
-function penguinFactMessage(recipientId) {
+function sendPenguinFact(recipientId) {
   console.log("penguin fact message");
     
   var messageData = {
@@ -157,7 +164,7 @@ function penguinFactMessage(recipientId) {
           },
           {
             "type": "postback",
-            "title": "Enough facts for now",
+            "title": "Okay, enough distraction",
             "payload": "end_convo"
             }],
         }]
@@ -168,13 +175,27 @@ function penguinFactMessage(recipientId) {
     sendMessage(recipientId, messageData);
 };
 
+function showHelp() {
+  
+}
+
+function sendGreeting() {
+  
+}
+
+function sendFoodMessage() {
+  
+}
+
+function sendDefault() {
+  
+}
+
 /*
 * Send Message function
 * Message should be in a JSON format 
 * If just sending a text it's {text: text}
 */
-
-var request;
 
 function sendMessage(recipientId, message) {
     request({
