@@ -136,6 +136,7 @@ function executeIntent(intent) {
       break;
     case "fact":
       sendPenguinFact();
+      break;
     case "food":
       sendFoodMessage();
       break;
@@ -176,7 +177,7 @@ function sendPenguinPhoto() {
           }, 
           {
             "type": "postback",
-            "title": "OK, Enough distraction",
+            "title": "OK, enough penguins",
             "payload": "goodbye",
           }],
         }]
@@ -207,7 +208,7 @@ function sendPenguinFact() {
           },
           {
             "type": "postback",
-            "title": "OK, Enough distraction",
+            "title": "OK, enough penguins",
             "payload": "goodbye"
             }],
         }]
@@ -253,7 +254,8 @@ function sendFoodMessage() {
 }
 
 function showHelp() {
-  var message = {text: "Penguins are naturally blur. Try: picture, fact, or food."
+  var message = {text: "Penguins are naturally blur. Try: picture, fact, or food." +
+              "Penguin\'s not really trained so that\'s all she knows now."
   };
   sendMessage(message);
 }
@@ -266,8 +268,8 @@ function sendGreeting() {
 }
 
 function sendDefault() {
-  var message = "I'm sorry, I don't understand you. Try: picture, fact, or food. " +
-              "Or type 'help' to see what Penguin can do!";
+  var message = {text: "I'm sorry, I don't understand you. Try: picture, fact, or food. " +
+              "Meanwhile, here's something for you." };
   sendMessage(message);
   
   var intents = ['picture', 'food', 'fact'];

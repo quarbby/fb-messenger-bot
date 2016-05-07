@@ -9,7 +9,10 @@ data.hungryPics = {
     'Feed the baby!': 'http://i.giphy.com/ZBOIMnp6quD72.gif',
     'Maybe some toast?': 'http://i.giphy.com/lV506aI9fTh6M.gif',
     'Oh cheeseburger!': 'http://i.giphy.com/O38MGj6hMuy6k.gif',
-    'Pancakes': 'http://i.giphy.com/tRv4MOTlaE0Hm.gif'
+    'Pancakes': 'http://i.giphy.com/tRv4MOTlaE0Hm.gif',
+    'Chocolate Cake?': 'http://i.giphy.com/xTiTnrliW65rlwud8I.gif',
+    'Yum yum': 'http://i.giphy.com/l41m2Un09PDMZ7ML6.gif',
+    'Fish!': 'http://i.giphy.com/Q5517to025VzG.gif'
 };
 
 data.factStrings = [
@@ -76,7 +79,13 @@ data.pictures = {
     'Chibird #1': 'http://i.giphy.com/LFX5vlKZ0zBFS.gif',
     'Chibird #2': 'http://i.giphy.com/xThuWqmNku6U9YNizC.gif',
     'Penguins in love': config.host + '/img/penguinlove.jpg',
-    'Run run!': 'http://i.giphy.com/2siTCKOmlMFnW.gif'
+    'Run run!': 'http://i.giphy.com/2siTCKOmlMFnW.gif',
+    'No no no': 'http://i.giphy.com/aJ38m24IMdiM.gif',
+    'Let\'s dance together': 'http://i.giphy.com/bPCR97p1IJcVa.gif',
+    'Baby penguin dancing!': 'http://i.giphy.com/zHokhPIy6lwas.gif',
+    'Baby Penguin waddling': 'http://i.giphy.com/tNVYqiDUuGdag.gif',
+    'Baby Penguin waddling ': 'http://i.giphy.com/xQbCR7fJipUha.gif'
+    
 };
 
 module.exports = data;
