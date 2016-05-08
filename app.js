@@ -39,6 +39,13 @@ app.get('/', function (req, res) {
   console.log(data.pictures['Baby Penguin #3']);
 });
 
+/* 
+* For Facebook Privacy Statement
+*/
+app.get('/privacy_policy/', function(req, res) {
+  res.send('Penguin is just a Facebook messenger bot. Your messages may be recorded for training purposes.');
+});
+
 /*
 * Function for Facebook App validation 
 * Currently not needed anymore
