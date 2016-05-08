@@ -1,6 +1,6 @@
 # A Penguin Facebook Messenger Bot 
 
-![penguin](demo/penguinfbbot2.gif)
+<img src="demo/penguinfbbot2.gif" width="500" height="430" />
 
 ### Overview
 A Node.js implementation of a Penguin Facebook Messenger Bot 
@@ -16,12 +16,14 @@ Bot page: [TotallyPenguin](https://www.facebook.com/Totallypenguin/)
 
 ### To Do
 
-See Issue Tracker :D 
-
+Refer to Issue Trackers on what you can contribute
 
 ### Screenshots 
 
 ![penguinfacts](demo/penguinfacts.png)
+![](demo/facts.png)
+![](demo/food.png)
+![](demo/waddle.png)
 
 ### Running the app
 1. Edit config.js.sample
@@ -32,9 +34,7 @@ See Issue Tracker :D
 4. Start talking to Penguin!
 
 **Notes**
-* Commit regularly to Github *except for config.js*
-* You can call https://expresstest-quarbby.c9users.io/imgTest to test stuff, 
-i.e. see console output without running the bot
+* *Do not commit config.js to Github*
 
 ### Resources
 - [Facebook Messenger Bots](https://developers.facebook.com/docs/messenger-platform/product-overview)
