@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var request = require("request");
+var http = require("http");
 
 var config = require("./config");
 var data = require("./data");
@@ -13,6 +14,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/img', express.static(__dirname + '/img'));
 app.use('/foodimg', express.static(__dirname + '/foodimg'));
+
+/* Prevent App from Sleeping */
+setInterval(function() {
+    http.get("https://<herokuapp>.herokuapp.com");
+}, 600000); // every 5 minutes (300000)
 
 /* Some globals because I can't solve some Javascript problems :( */
 
