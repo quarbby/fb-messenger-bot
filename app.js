@@ -58,7 +58,7 @@ app.get('/privacy_policy/', function(req, res) {
 */
 
 app.get('/webhook/', function (req, res) {
-  if (req.query['hub.verify_token'] === 'penguin_dragon') {
+  if (req.query['hub.verify_token'] === '<YOUR_VERIFY_TOKEN>') {
     res.send(req.query['hub.challenge']);
     console.log("Veryfing success");
     res.sendStatus(200)
