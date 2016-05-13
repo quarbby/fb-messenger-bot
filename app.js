@@ -17,7 +17,7 @@ app.use('/foodimg', express.static(__dirname + '/foodimg'));
 
 /* Prevent App from Sleeping */
 setInterval(function() {
-    http.get("https://<herokuapp>.herokuapp.com");
+    http.get("https://penguin-fb-bot.herokuapp.com");
 }, 600000); // every 5 minutes (300000)
 
 /* Some globals because I can't solve some Javascript problems :( */
@@ -32,6 +32,7 @@ var userid = "";
 app.get('/', function (req, res) {
   res.send('Hello World!');
   var str = "how about some pizza";
+  /*
   console.log(encodeURI(str));
   console.log(req.get('host'));
   
@@ -43,14 +44,18 @@ app.get('/', function (req, res) {
   
   console.log(data.pictures['Baby Penguin #1']);
   console.log(data.pictures['Baby Penguin #3']);
+  */
+  text = 'food';
+  getRequest();
 });
 
 /* 
-* For Facebook Privacy Statement
+* Privacy Policy for Facebook App
 */
-app.get('/privacy_policy/', function(req, res) {
-  res.send('Penguin is just a Facebook messenger bot. Your messages may be recorded for training purposes.');
-});
+
+app.get('/privacy_policy/', function (req, res) {
+  res.send("Penguin is simply a messenger bot. Your messages may be used to improve the bot.");
+})
 
 /*
 * Function for Facebook App validation 
@@ -110,7 +115,28 @@ function getRequest(callback) {
   }, function(error, response, body){
       if(!error && response.statusCode == 200) {
         var bodyjsonparse = JSON.parse(body);
+        var intent = "";
         
+        //console.log("JSON Body " + bodyjsonparse);
+        //console.log("Entities " + bodyjsonparse['entities']['intent'][0]['value']);
+        
+        
+        try {
+          intent = bodyjsonparse['entities']['intent'][0]['value']['value'];
+          if (intent == undefined) {
+            intent = bodyjsonparse['entities']['intent'][0]['value'];
+          }
+          
+        } catch (err) {
+          intent = '';
+          
+        } finally {
+          console.log("intent " + intent);
+        
+          executeIntent(intent);
+        }
+
+        /*
         var entities = bodyjsonparse["outcomes"][0]["entities"];
         var intent;
         console.log(entities);
@@ -121,11 +147,8 @@ function getRequest(callback) {
         } else {
           intent = entities["intent"][0]["value"];
         }
-        
-        console.log("intent " + intent);
-        
-        executeIntent(intent);
-          
+        */
+
       }
   });
 }
