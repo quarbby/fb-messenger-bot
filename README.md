@@ -1,6 +1,6 @@
 # A Penguin Facebook Messenger Bot 
 
-<img src="demo/penguinfbbot2.gif" width="500" height="430" />
+<img src="demo/penguinfbbot3.gif" width="500" height="430" />
 
 ### Overview
 A Node.js implementation of a Penguin Facebook Messenger Bot 
