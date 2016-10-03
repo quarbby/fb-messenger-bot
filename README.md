@@ -40,3 +40,5 @@ Refer to Issue Trackers on what you can contribute
 - [Facebook Messenger Bots](https://developers.facebook.com/docs/messenger-platform/product-overview)
 - [Wit.ai](https://wit.ai/)
 - [Node.js Express tutorial](http://www.tutorialspoint.com/nodejs/nodejs_express_framework.htm)
+- [A facebook bot messenger tutorial on Github](https://github.com/jw84/messenger-bot-tutorial)
+- [Botwiki](https://botwiki.org/tutorials/facebook-messenger-bots/)
